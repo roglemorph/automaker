@@ -77,12 +77,7 @@ def main_loop(reloadSettings=True):
     
     user_input = input("Enter command: ")
     user_input = user_input.split(" ")
-    #for i in range(len(user_input)):
-        #user_input[i]=user_input[i].replace('_',' ')
 
-
-      
-    #print(user_input)
     match(user_input[0]):
 
         case "mkfile":
@@ -111,7 +106,6 @@ def main_loop(reloadSettings=True):
             return main_loop(False)
 
         case "change":
-            #print("Change parameter command dectected")
             if len(user_input) >= 3:
                 if len(user_input) > 3:
                     removeSpace=""
@@ -157,11 +151,6 @@ def main_loop(reloadSettings=True):
         case "exit":
             quit()
 
-
-
-              
-
-       
     input("No valid command dectected, press enter to continue.")
     main_loop(False)
 
