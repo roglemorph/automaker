@@ -1,4 +1,4 @@
 template_path=default_template.tex
-output_dir=C:/Users/rogle/Desktop
+output_dir=C:
 output_filename=USETITLE
-author_name=Spencer Martz
+author_name=Your Name Here
