@@ -1,6 +1,5 @@
 
 import os
-import string
 
 
 def create_latex_document(base_template_path, output_dir, output_filename, replacements):
@@ -24,7 +23,6 @@ def create_latex_document(base_template_path, output_dir, output_filename, repla
     
     print(f"LaTeX document created at: {output_path}")
 
-
 def save_settings(settings, filename='settings.txt'):
     """Save user settings to a text file."""
     with open(filename, 'w') as file:
@@ -40,7 +38,8 @@ def load_settings(filename='settings.txt'):
             for line in file:
                 key, value = line.strip().split('=')
                 settings[key] = value
-        #print(f"Settings loaded from {filename}.")
+        print(f"Settings loaded from {filename}.")
+        print(settings)
     except FileNotFoundError:
         print(f"No settings file found. Using default settings.")
         settings =  {
@@ -54,104 +53,29 @@ def load_settings(filename='settings.txt'):
     return settings
 
 
-#default settings
+print("Hello, this program will create a latex document using a template. But you should use the GUI now!")
 
 
-print("Hello, this program will create a latex document using a template.")
-
-
-global user_settings
-
-def main_loop(reloadSettings=True):
-    global user_settings
-    if reloadSettings:
-        user_settings = load_settings()
-
-    base_template_path=user_settings['template_path']
-    author_name=user_settings['author_name']
-    output_dir=user_settings['output_dir']
-    output_filename=user_settings['output_filename']
-
-    print(f'Settings:\n    Name: {author_name}\n    template path: {base_template_path}\n    target directory: {output_dir}\n    filename: {output_filename}\n')
-    print("Commands:\n    mkfile {title}\n    change {A:author_name O:output_dir F:output_filename, T:template_path} {value}\n    default\n    exit\n")
-    
-    user_input = input("Enter command: ")
-    user_input = user_input.split(" ")
-
-    match(user_input[0]):
-
-        case "mkfile":
-            if len(user_input) > 1:
-                title=""
-                for string in user_input[1:]:
-                    title += string + " "
-                user_input[1]=title
-                if output_filename != "USETITLE":
-                    filename = output_filename
-                else: 
-                    filename = str(user_input[1]) + '.tex'
-
-            print(f"Making tex file at {output_dir}")
-            replacements = {
-                '<TITLE>': user_input[1],
-                '<AUTHOR>': author_name,
-            }
-            if len(user_input) > 1:
-                if output_filename != "USETITLE":
-                    filename = output_filename
-                else: 
-                    filename = str(user_input[1]) + '.tex'
-
-            create_latex_document(base_template_path, output_dir, filename, replacements)
-            return main_loop(False)
-
-        case "change":
-            if len(user_input) >= 3:
-                if len(user_input) > 3:
-                    removeSpace=""
-                    for string in user_input[2:]:
-                        removeSpace += string + " "
-                    user_input[2]=removeSpace
-                match(user_input[1]):
-                    case 'A':
-                        author_name = user_input[2]
-                    case 'O':
-                        output_dir = user_input[2]
-                    case 'F':
-                        output_filename = user_input[2]
-                    case 'T':
-                        base_template_path=user_input[2]
-                    case _:
-                        print("Invalid selection!")
-                        return main_loop(False)
-                if output_filename != "USETITLE":
-                    if (not output_filename.endswith('.tex')):
-                        output_filename+= '.tex'           
-                save_settings({
-                'template_path' :base_template_path,
-                'output_dir' :output_dir,
-                'output_filename':output_filename,
-                'author_name': author_name
-                })
-                return main_loop(True)
-            if len(user_input) == 2:
-                print("No value provided!")
-                return main_loop(False)
+user_settings = load_settings()
+base_template_path=user_settings['template_path']
+author_name=user_settings['author_name']
+output_dir = user_settings['output_dir']
+output_filename=user_settings['output_filename']
 
 
 
-        case "default":
-            save_settings({
-            'template_path' :'default_template.tex',
-            'output_dir' :'Output folder',
-            'output_filename': "USETITLE",
-            'author_name': "Author"})
-            return main_loop(True)
+def setUpLatexFile(title, template, author, output, filename, sections ):
+    working_sections = "\section*{} \n"
+    for user_section in sections:
+         working_sections += "\n\section*{" + user_section + "}\n"
 
-        case "exit":
-            quit()
 
-    input("No valid command dectected, press enter to continue.")
-    main_loop(False)
-
-main_loop()
+    replacements = {
+    '<TITLE>': title,
+    '<AUTHOR>': author,
+    '<SECTIONS>': working_sections
+    }
+    if filename == "USETITLE":
+        filename = str(title) + '.tex'
+    print(f"Making tex file at {output}")
+    create_latex_document(template, output, filename, replacements)
