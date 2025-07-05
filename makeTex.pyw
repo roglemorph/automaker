@@ -21,14 +21,14 @@ def create_latex_document(base_template_path, output_dir, output_filename, repla
     with open(output_path, 'w') as file:
         file.write(latex_content)
     
-    print(f"LaTeX document created at: {output_path}")
+    #print(f"LaTeX document created at: {output_path}")
 
 def save_settings(settings, filename='settings.txt'):
     """Save user settings to a text file."""
     with open(filename, 'w') as file:
         for key, value in settings.items():
             file.write(f"{key}={value}\n")
-    print(f"Settings saved to {filename}.")
+    #print(f"Settings saved to {filename}.")
 
 def load_settings(filename='settings.txt'):
     """Load user settings from a text file."""
@@ -38,10 +38,10 @@ def load_settings(filename='settings.txt'):
             for line in file:
                 key, value = line.strip().split('=')
                 settings[key] = value
-        print(f"Settings loaded from {filename}.")
-        print(settings)
+        #print(f"Settings loaded from {filename}.")
+        #print(settings)
     except FileNotFoundError:
-        print(f"No settings file found. Using default settings.")
+        #print(f"No settings file found. Using default settings.")
         settings =  {
         'template_path' :'default_template.tex',
         'output_dir' :'output_folder',
@@ -53,7 +53,7 @@ def load_settings(filename='settings.txt'):
     return settings
 
 
-print("Hello, this program will create a latex document using a template. But you should use the GUI now!")
+#print("Hello, this program will create a latex document using a template. But you should use the GUI now!")
 
 
 user_settings = load_settings()
@@ -77,5 +77,5 @@ def setUpLatexFile(title, template, author, output, filename, sections ):
     }
     if filename == "USETITLE":
         filename = str(title) + '.tex'
-    print(f"Making tex file at {output}")
+    #print(f"Making tex file at {output}")
     create_latex_document(template, output, filename, replacements)
